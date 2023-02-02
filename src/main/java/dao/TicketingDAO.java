@@ -1,27 +1,57 @@
 package dao;
 
 import entities.Distributore;
-import entities.Utente;
 import entities.abstracts.Ticketing;
 import utils.JpaUtils;
 
 public class TicketingDAO extends JpaUtils {
 
+	// METODO PER SALVARE I DISTRIBUTORI/RIVENDITORI SUL DATABASE
 	public void save(Ticketing tick) {
-		
 		try {
-			
 			t.begin();
 			em.persist(tick);
 			t.commit();
 			
 			System.out.println( "Elemento inserito correttamente" );
 		} catch(Exception e) {
-			System.out.println( "ERRORE durante l'inserimento dell'elemento!!" );
+			logger.error( "Errore durante l'inserimento dell'elemento!" + e);
 		}
-		
 	}
 	
+	
+	// METODO PER CONTROLLARE LO STATO DEL DISTRIBUTORE (SE IN SERVIZIO O FUORI SERVIZIO)
+	public static void checkDistributore(int id) {
+		Distributore d = em.find(Distributore.class, id);
+		
+		int counter = d.getCounterBiglietti();
+		boolean inServizio = d.isInServizio();
+		
+		if(counter == 0) {
+			d.setInServizio(false);
+			
+			t.begin();
+			em.persist(d);
+			t.commit();
+			
+			logger.error("Il distributore di " + d.getLuogo() + " è fuori servizio.");
+			System.exit(0);
+		} else {
+			if(inServizio == false) {
+				d.setInServizio(true);
+				
+				t.begin();
+				em.persist(d);
+				t.commit();
+			}
+			
+			System.out.println("Hai scelto Stazione Tiburtina");
+			System.out.println("Benvenuto nel distributore");
+		}
+	} 
+	
+	
+	// METODO PER SETTARE IL NUMERO DEI BIGLIETTI EMESSI
 	public static void countBiglietti(int id) {
 		Ticketing ti = em.find(Ticketing.class, id);
 		
@@ -35,13 +65,20 @@ public class TicketingDAO extends JpaUtils {
 			t.begin();
 			em.persist(ti);
 			t.commit();
-			
-			
 		} catch(Exception e1) {
-			System.out.println("Errore!");
+			logger.error("Errore!" + e1);
 		}
 	}
 	
+	
+	// METODO CHE RITORNA IL NUMERO DI BIGLIETTI EMESSI (USATO NELLO SCANNER)
+	public static int getTicketNumber(int id) {
+		Ticketing ti = em.find(Ticketing.class, id);
+		return ti.getCounterBiglietti();
+	}
+	
+	
+	// METODO PER SETTARE IL NUMERO DEGLI ABBONAMENTI EMESSI
 	public static void countAbbonamenti(int id) {
 		Ticketing ti = em.find(Ticketing.class, id);
 		
@@ -53,19 +90,13 @@ public class TicketingDAO extends JpaUtils {
 			t.begin();
 			em.persist(ti);
 			t.commit();
-			
-			
 		} catch(Exception e1) {
-			System.out.println("Errore!");
+			logger.error("Errore!" + e1);
 		}
 	}
 	
-	public static int getTicketNumber(int id) {
-		Ticketing ti = em.find(Ticketing.class, id);
-		
-		return ti.getCounterBiglietti();
-	}
 	
+	// METODO CHE RITORNA QUANTI BIGLIETTI E ABBONAMENTI SONO STATI EMESSI IN UNA DETERMINATA STAZIONE
 	public static void getTitoliEmessi(int id) {
 		Ticketing ti = em.find(Ticketing.class, id);
 		
@@ -75,28 +106,5 @@ public class TicketingDAO extends JpaUtils {
 		
 		System.out.println("Sono stati emessi " + bigliettiEmessi + " biglietti e " + abbonamentiEmessi +  " abbonamenti nella " + stazione);
 	}
-	
-	public static void checkDistributore(int id) {
-		Distributore d = em.find(Distributore.class, id);
-		int counter = d.getCounterBiglietti();
-		boolean inServizio = d.isInServizio();
-		if(counter == 0) {
-			d.setInServizio(false);
-			t.begin();
-			em.persist(d);
-			t.commit();
-			System.out.println("Il distributore di " + d.getLuogo() + " è fuori servizio.");
-			System.exit(0);
-		} else {
-			if(inServizio == false) {
-				d.setInServizio(true);
-				t.begin();
-				em.persist(d);
-				t.commit();
-			}
-			System.out.println("Hai scelto Stazione Tiburtina");
-			System.out.println("Benvenuto nel distributore");
-		}
-	} 
-	
+
 }

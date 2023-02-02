@@ -6,9 +6,6 @@ import java.util.Scanner;
 
 import javax.persistence.TypedQuery;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import dao.TesseraDAO;
 import dao.TicketingDAO;
 import dao.TitoloDiViaggioDAO;
@@ -26,7 +23,6 @@ import enums.Periodicita;
 public class Menu extends JpaUtils {
 	
 	static Scanner sc = new Scanner(System.in);
-	static final Logger logger = LoggerFactory.getLogger(JpaUtils.class);
 	static final String ANSI_RESET = "\u001B[0m";
 	static final String ANSI_RED = "\u001B[31m";
 	static final String ANSI_GREEN = "\033[0;32m";
@@ -127,10 +123,11 @@ public class Menu extends JpaUtils {
 
 	// MEDOTI DI GESTIONE TESSERA (ACQUISTO, VERIFICA DATI E RINNOVO)
 	public static void gestioneTessera() {
-		System.out.println(ANSI_GREEN + "Benvenuto nella gestione tessera <---" + ANSI_RESET);
+		System.out.println("Benvenuto nella gestione tessera <---");
 		System.out.println("1 - Crea tessera");
 		System.out.println("2 - Verifica dati tessera");
 		System.out.println("3 - Rinnova tessera");
+		System.out.println(ANSI_GREEN + "Cosa vuoi fare? <---" + ANSI_RESET);
 		int selezione4 = sc.nextInt();
 		
 		switch(selezione4) {
@@ -172,16 +169,14 @@ public class Menu extends JpaUtils {
 		System.out.println("Inserisci numero tessera");
 		long selezione5 = sc.nextLong();
 		
-		TesseraDAO tesseraDAO = new TesseraDAO();
-		tesseraDAO.getDatiTessera(selezione5);
+		TesseraDAO.getDatiTessera(selezione5);
 	}
 	
 	public static void rinnovaTessera() {
 		System.out.println("Inserisci numero tessera da rinnovare");
 		long selezione6 = sc.nextLong();
 		
-		TesseraDAO tesseraDAO = new TesseraDAO();
-		tesseraDAO.rinnovaTessera(selezione6);
+		TesseraDAO.rinnovaTessera(selezione6);
 	}
 	
 	
@@ -237,12 +232,11 @@ public class Menu extends JpaUtils {
 	}
 
 	
-	// METODI ABBONAMENTO, (CREAZIONE, VERIFICA ABBONAMENTO ATTIVO,)
+	// METODI ABBONAMENTO (CREAZIONE, VERIFICA ABBONAMENTO ATTIVO)
 	public static void acquistaAbbonamento() {
 		System.out.println("Inserisci il tuo numero tessera");
 		nTessera = sc.nextLong();
-		TitoloDiViaggioDAO titoloDAO = new TitoloDiViaggioDAO();
-		titoloDAO.checkTessera(nTessera);
+		TitoloDiViaggioDAO.checkTessera(nTessera);
 		checkUtente();
 		
 		System.out.println("1 - Settimanale");
@@ -250,16 +244,16 @@ public class Menu extends JpaUtils {
 		int periodo = sc.nextInt();
 
 		switch (periodo) {
-		case (1):
-			saveAbbonamento(getUtente(nTessera), LocalDate.now(), LocalDate.now().plusWeeks(1), true, Periodicita.SETTIMANALE);
-			break;
-		case (2):
-			saveAbbonamento(getUtente(nTessera), LocalDate.now(), LocalDate.now().plusMonths(1), true, Periodicita.MENSILE);
-			break;
-		default:
-			logger.error("Valore non presente nella lista!");
-			break;
-		}
+			case (1):
+				saveAbbonamento(getUtente(nTessera), LocalDate.now(), LocalDate.now().plusWeeks(1), true, Periodicita.SETTIMANALE);
+				break;
+			case (2):
+				saveAbbonamento(getUtente(nTessera), LocalDate.now(), LocalDate.now().plusMonths(1), true, Periodicita.MENSILE);
+				break;
+			default:
+				logger.error("Valore non presente nella lista!");
+				break;
+			}
 	}
 	
 	public static void saveAbbonamento(Utente codice_utente, LocalDate dataEmissione, LocalDate dataScadenza, boolean attivo,
@@ -281,15 +275,7 @@ public class Menu extends JpaUtils {
 			System.exit(0);
 		}
 	}
-	
-	public static void convalidaTicket() {
-		System.out.println("Inserisci il codice biglietto/abbonamento");
-		int select = sc.nextInt();
 		
-		TitoloDiViaggioDAO titoloDAO = new TitoloDiViaggioDAO();
-		titoloDAO.getTitolo(select, selectMezzo);
-	}
-	
 	
 	// METODO GESTIONE MEZZI
 	public static void scegliMezzo() {
@@ -350,15 +336,12 @@ public class Menu extends JpaUtils {
 	}
 
 	
-	
-
-
-
-
-
-	
-
-	
-
+	// METODO PER OBLITERARE IL BIGLIETTO O CONTROLLARE L'ABBONAMENTO
+	public static void convalidaTicket() {
+		System.out.println("Inserisci il codice biglietto/abbonamento");
+		int select = sc.nextInt();
+		
+		TitoloDiViaggioDAO.getTitolo(select, selectMezzo);
+	}
 	
 }

@@ -15,13 +15,12 @@ public class App {
 
 	public static void main(String[] args) {
 		
-		Menu.runApp();
-
-		//Gestionale.counter();
 		//Gestionale.addMezzi();
-		
 		//Menu.saveDistributore();
 		//Menu.saveRivenditore();
+		
+		//Gestionale.counter();
+		Menu.runApp();
 
 		//TitoloDiViaggioDAO.conteggioTitoli(Abbonamento.class, LocalDate.now(), LocalDate.now().plusDays(30));
 		//TicketingDAO.getTitoliEmessi(1);

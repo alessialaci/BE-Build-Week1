@@ -2,6 +2,7 @@ package entities;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -19,8 +20,12 @@ import lombok.Setter;
 @NamedQuery(name = "check_validita", query = "UPDATE Tessera SET validita = false WHERE dataScadenza < CURRENT_DATE")
 public class Tessera extends Utente {
 
+	@Column(name = "data_emissione")
 	private LocalDate dataEmissione;
+	
+	@Column(name = "data_scadenza")
 	private LocalDate dataScadenza;
+	
 	private boolean validita = true;
 	
 	public Tessera(String nome, String cognome, String email, LocalDate dataEmissione, LocalDate dataScadenza) {

@@ -1,6 +1,7 @@
 package entities.abstracts;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
@@ -17,7 +18,7 @@ import entities.Tratta;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
+
 
 @Entity
 @Table(name = "mezzi")
@@ -33,6 +34,8 @@ abstract public class Mezzo {
 	private int mezzo_id;
 	
 	private int capienza;
+	
+	@Column(name = "in_servizio")
 	private boolean inServizio;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
@@ -40,6 +43,8 @@ abstract public class Mezzo {
 	private Tratta tratta;
 	
 	private String numero;
+	
+	@Column(name = "biglietti_vidimati")
 	private int bigliettiVidimati;
 
 	public Mezzo(int capienza, boolean inServizio, Tratta tratta, String numero) {

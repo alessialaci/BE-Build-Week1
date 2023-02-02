@@ -6,10 +6,10 @@ import entities.Autobus;
 import entities.Tram;
 import entities.Tratta;
 
+
 public class Gestionale {
 
 	public static void addMezzi() {
-		
 		Tratta tr1 = new Tratta("Stazione Termini", "Stazione Tiburtina", 50);
 		Tratta tr2 = new Tratta("Stazione Termini", "Villa Borghese", 20);
 		Tratta tr3 = new Tratta("Stazione Tiburtina", "Piazza del Popolo", 6);
@@ -36,8 +36,12 @@ public class Gestionale {
 		saveTram(t2);
 		saveTram(t3);
 		saveTram(t4);
-		
-		
+	}
+	
+	public static Tratta saveTratta(Tratta tr) {
+		TrattaDAO tratta = new TrattaDAO();
+		tratta.save(tr);
+		return tr;
 	}
 	
 	public static Autobus saveAutobus(Autobus a) {
@@ -52,31 +56,25 @@ public class Gestionale {
 		return t;
 	}
 	
-	public static Tratta saveTratta(Tratta tr) {
-		TrattaDAO tratta = new TrattaDAO();
-		tratta.save(tr);
-		return tr;
-	}
-	
 	public static void counter() {
 		final String ANSI_RESET = "\u001B[0m";
 		final String ANSI_RED = "\u001B[31m";
 		final String ANSI_BACKGROUND = "\u001B[41m";
 		long endTime = System.currentTimeMillis() + (3 * 1000);
-	    int count = 0;
+	    
 	    System.out.println("Caricamento dati" );
+	    
 	    while (System.currentTimeMillis() < endTime) {
 	      try {
 	        Thread.sleep(250);
-	        count++;
 	        System.out.print(ANSI_RED + ANSI_BACKGROUND + "." + ANSI_RESET + " ");
 	      } catch (InterruptedException e) {
 	        e.printStackTrace();
 	      }
 	    }
-	    System.out.println();
-	    System.out.println("Dati caricati con successo!");
-	    System.out.println(ANSI_RED + "-------------------------------------------" + ANSI_RESET);
+	    
+	    System.out.printf("%nDati caricati con successo!%n");
+	    System.out.println("-------------------------------------------");
 	}
 	
 }

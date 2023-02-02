@@ -2,6 +2,7 @@ package entities;
 
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,7 +14,7 @@ import entities.abstracts.Mezzo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
+
 
 @Entity
 @Table(name = "tratte")
@@ -28,13 +29,14 @@ public class Tratta {
 
 	private String partenza;
 	private String capolinea;
+	
+	@Column(name = "tempo_percorrenza")
 	private int tempoPercorrenza;
 	
 	@OneToMany(mappedBy = "tratta")
 	private Set<Mezzo> mezzi;
 
 	public Tratta(String partenza, String capolinea, int tempoPercorrenza) {
-		super();
 		this.partenza = partenza;
 		this.capolinea = capolinea;
 		this.tempoPercorrenza = tempoPercorrenza;

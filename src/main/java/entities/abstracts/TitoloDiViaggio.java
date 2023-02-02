@@ -2,6 +2,7 @@ package entities.abstracts;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
@@ -16,6 +17,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 @Entity
 @Table(name = "titoli_di_viaggio")
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -29,7 +31,10 @@ abstract public class TitoloDiViaggio {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int titolo_id;
 	
+	@Column(name = "data_emissione")
 	private LocalDate dataEmissione;
+	
+	@Column(name = "data_scadenza")
 	private LocalDate dataScadenza;
 	
 	public TitoloDiViaggio(LocalDate dataEmissione, LocalDate dataScadenza) {

@@ -1,5 +1,6 @@
 package entities.abstracts;
 
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
@@ -10,10 +11,10 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
-import entities.Distributore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 
 @Entity
 @Table(name = "ticketing")
@@ -28,9 +29,15 @@ abstract public class Ticketing {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int ticketing_id;
 	
+	@Column(name = "biglietti_emessi")
 	private int bigliettiEmessi;
+	
 	private String luogo;
+	
+	@Column(name = "counter_biglietti")
 	private int counterBiglietti;
+	
+	@Column(name = "abbonamenti_emessi")
 	private int abbonamentiEmessi;
 	
 	public Ticketing(int bigliettiEmessi, String luogo, int counterBiglietti, int abbonamentiEmessi) {

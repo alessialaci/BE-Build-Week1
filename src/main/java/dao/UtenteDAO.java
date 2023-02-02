@@ -4,38 +4,29 @@ import entities.Abbonamento;
 import entities.Utente;
 import utils.JpaUtils;
 
+
 public class UtenteDAO extends JpaUtils {
 
+	// METODO PER SALVARE DATI UTENTE NEL DATABASE
 	public void save(Utente u) {
-		
 		try {
-			
 			t.begin();
 			em.persist(u);
 			t.commit();
 			
 			System.out.println( "Utente inserito correttamente" );
 		} catch(Exception e) {
-			System.out.println( "ERRORE durante l'inserimento dell'Utente!!" );
+			logger.error( "Errore durante l'inserimento dell'Utente!" );
 		}
-		
 	}
 	
-	public Utente getUtenteById(long id) {
-		Utente e = em.find(Utente.class, id);
-		
-		if( e == null ) {
-			System.out.println( "Il numero di tessera " + id + " non esiste!" );
-		}
-		
-		return e;
-	}
 	
+	// METODO PER MODIFICARE LA VALIDITÀ DI UN ABBONAMENTO A true
 	public static void updateUtenteById(long id, Abbonamento abbonamento) {
 		Utente u = em.find(Utente.class, id);
 		
 		if(u == null) {
-			System.out.println("Errore, questo utente non esiste!");
+			logger.error("Errore, questo utente non esiste!");
 			return;
 		}
 		
@@ -49,9 +40,20 @@ public class UtenteDAO extends JpaUtils {
 			
 			
 		} catch(Exception e1) {
-			System.out.println("Errore, abbonamento già attivo!");
+			logger.error("Errore, abbonamento già attivo!");
 		}
-		
 	}
 	
+	
+	// METODO PER RECUPERARE UN UTENTE
+	public Utente getUtenteById(long id) {
+		Utente e = em.find(Utente.class, id);
+		
+		if( e == null ) {
+			logger.error( "Il numero di tessera " + id + " non esiste!" );
+		}
+		
+		return e;
+	}
+
 }
