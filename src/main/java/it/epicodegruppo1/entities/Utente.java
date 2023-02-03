@@ -1,4 +1,4 @@
-package entities;
+package it.epicodegruppo1.entities;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -35,20 +35,10 @@ public class Utente {
 	@JoinColumn(name = "abbonamento_id")
 	private Abbonamento abbonamento;
 	
-	private boolean abbonamentoattivo;
-	
 	public Utente(String nome, String cognome, String email) {
 		this.nome = nome;
 		this.cognome = cognome;
 		this.email = email;
-	}
-
-	public boolean isAbbonamentoattivo() {
-		return abbonamentoattivo;
-	}
-
-	public void setAbbonamentoattivo(boolean abbonamentoattivo) {
-		this.abbonamentoattivo = abbonamentoattivo;
 	}
 	
 }

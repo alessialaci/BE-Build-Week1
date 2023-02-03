@@ -1,10 +1,10 @@
-package utils;
+package it.epicodegruppo1.utils;
 
-import dao.MezzoDAO;
-import dao.TrattaDAO;
-import entities.Autobus;
-import entities.Tram;
-import entities.Tratta;
+import it.epicodegruppo1.dao.MezzoDAO;
+import it.epicodegruppo1.dao.TrattaDAO;
+import it.epicodegruppo1.entities.Autobus;
+import it.epicodegruppo1.entities.Tram;
+import it.epicodegruppo1.entities.Tratta;
 
 
 public class Gestionale {

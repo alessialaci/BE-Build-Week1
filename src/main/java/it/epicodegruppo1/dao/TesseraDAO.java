@@ -1,11 +1,11 @@
-package dao;
+package it.epicodegruppo1.dao;
 
 import java.time.LocalDate;
 
 import javax.persistence.Query;
 
-import entities.Tessera;
-import utils.JpaUtils;
+import it.epicodegruppo1.entities.Tessera;
+import it.epicodegruppo1.utils.JpaUtils;
 
 
 public class TesseraDAO extends JpaUtils {
@@ -17,14 +17,14 @@ public class TesseraDAO extends JpaUtils {
 			em.persist(tes);
 			t.commit();
 			
-			System.out.println( "Tessera inserita correttamente" );
+			System.out.println("Tessera inserita correttamente");
 		} catch(Exception e) {
-			logger.error( "Errore durante l'inserimento della tessera!" );
+			logger.error("Errore durante l'inserimento della tessera");
 		}
 	}
 	
 	
-	// METODO PER MODIFICARE VALIDITA DELLA TESSERA SUL DATABASE (QUERY NELLA CLASSE TESSERA)
+	// METODO PER MODIFICARE VALIDITÀ DELLA TESSERA SUL DATABASE (QUERY NELLA CLASSE TESSERA)
 	public static void update() {
 		t.begin();
 		
@@ -40,11 +40,11 @@ public class TesseraDAO extends JpaUtils {
 		Tessera t = em.find(Tessera.class, id);
 		
 		if( t == null ) {
-			System.out.println( "La tessera numero " + id + " non è stata trovata!" );
+			System.out.println("La tessera numero " + id + " non è stata trovata");
 			return;
 		}
 		
-		System.out.println( "Dati tessera #" + id );
+		System.out.println("Dati tessera numero " + id);
 		System.out.printf(  
 			"Nome: %s | Cognome: %s | Email: %s | Data emissione: %s | Data scadenza: %s%n",
 			t.getNome(), t.getCognome(), t.getEmail(), t.getDataEmissione().toString(), t.getDataScadenza().toString());
@@ -52,17 +52,21 @@ public class TesseraDAO extends JpaUtils {
 		boolean validita = t.isValidita();
 		
 		if(validita == true) {
-			System.out.println("La tessera è valida!");
+			System.out.println("La tessera è valida");
 		} else {
-			System.out.println("La tessera è scaduta! Rinnovala!");
+			System.out.println("La tessera è scaduta, rinnovala");
 		}
 		
-		boolean validitaAbbonamento = t.isAbbonamentoattivo();
-		
-		if(validitaAbbonamento == true) {
-			System.out.println("Hai un abbonamento attivo che scade il " + t.getAbbonamento().getDataScadenza());
-		} else {
-			System.out.println("Non hai un abbonamento attivo!");
+		try {
+			boolean validitaAbbonamento = t.getAbbonamento().isValidita();
+			
+			if(validitaAbbonamento == true) {
+				System.out.println("Hai un abbonamento attivo che scade il " + t.getAbbonamento().getDataScadenza());
+			} else {
+				System.out.println("Non hai un abbonamento attivo");
+			}
+		} catch (Exception e) {
+			System.out.println("Nessun abbonamento attivo");
 		}
 	}
 	
@@ -72,14 +76,14 @@ public class TesseraDAO extends JpaUtils {
 		Tessera tes = em.find(Tessera.class, id);
 		
 		if( tes == null ) {
-			logger.error( "La tessera numero " + id + " non è stata trovata!" );
+			System.out.println( "La tessera numero " + id + " non è stata trovata" );
 			return;
 		}
 		
 		boolean validita = tes.isValidita();
 		
 		if(validita == true) {
-			System.out.println("La tessera è già valida impossibile rinnovarla!");
+			System.out.println("La tessera è già valida, impossibile rinnovarla");
 		} else {
 			tes.setValidita(true);
 			tes.setDataScadenza(LocalDate.now().plusYears(1));
@@ -88,7 +92,7 @@ public class TesseraDAO extends JpaUtils {
 			em.persist(tes);
 			t.commit();
 			
-			System.out.println("Tessera rinnovata!");
+			System.out.println("Tessera rinnovata con successo");
 			System.out.println("La nuova data di scadenza è:" + tes.getDataScadenza());
 		}
 	}

@@ -1,4 +1,4 @@
-package utils;
+package it.epicodegruppo1.utils;
 import java.time.LocalDate;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -6,18 +6,20 @@ import java.util.Scanner;
 
 import javax.persistence.TypedQuery;
 
-import dao.TesseraDAO;
-import dao.TicketingDAO;
-import dao.TitoloDiViaggioDAO;
-import dao.UtenteDAO;
-import entities.Abbonamento;
-import entities.Biglietto;
-import entities.Distributore;
-import entities.Rivenditore;
-import entities.Tessera;
-import entities.Utente;
-import entities.abstracts.Mezzo;
-import enums.Periodicita;
+import it.epicodegruppo1.dao.MezzoDAO;
+import it.epicodegruppo1.dao.TesseraDAO;
+import it.epicodegruppo1.dao.TicketingDAO;
+import it.epicodegruppo1.dao.TitoloDiViaggioDAO;
+import it.epicodegruppo1.dao.TrattaDAO;
+import it.epicodegruppo1.dao.UtenteDAO;
+import it.epicodegruppo1.entities.Abbonamento;
+import it.epicodegruppo1.entities.Biglietto;
+import it.epicodegruppo1.entities.Distributore;
+import it.epicodegruppo1.entities.Rivenditore;
+import it.epicodegruppo1.entities.Tessera;
+import it.epicodegruppo1.entities.Utente;
+import it.epicodegruppo1.entities.abstracts.Mezzo;
+import it.epicodegruppo1.enums.Periodicita;
 
 
 public class Menu extends JpaUtils {
@@ -35,11 +37,13 @@ public class Menu extends JpaUtils {
 	static Mezzo v;
 	
 	public static void runApp() {
-		TesseraDAO.update();
-		//TitoloDiViaggioDAO.updateAbbonamento();
-		//TitoloDiViaggioDAO.updateAbbonamentoUtente();
+		boolean attivo;
 		
-		//do {
+		do {
+			TesseraDAO.update();
+			MezzoDAO.queryManutenzione();
+			TitoloDiViaggioDAO.updateAbbonamento();
+		
 			try {
 				System.out.println("Benvenuto a Roma!");
 			    System.out.println("-------------------------------------------");
@@ -58,6 +62,7 @@ public class Menu extends JpaUtils {
 						break;
 					default:
 						logger.error("Valore non presente nella lista!");
+						System.exit(0);
 						break;
 					}
 
@@ -65,6 +70,7 @@ public class Menu extends JpaUtils {
 				System.out.println("2 - Acquista titolo di viaggio");
 				System.out.println("3 - Sali a bordo di:");
 				System.out.println(ANSI_GREEN + "Cosa vuoi fare? <---" + ANSI_RESET);
+				
 				int selezione2 = sc.nextInt();
 				sc.nextLine();
 				
@@ -77,25 +83,25 @@ public class Menu extends JpaUtils {
 						break;
 					case (3):
 						scegliMezzo();
-						convalidaTicket();
 						break;
 					default:
 						logger.error("Valore non presente nella lista!");
+						System.exit(0);
 						break;
 				}
 			} catch (InputMismatchException e) {
 				logger.error("Inserisci un valore corretto");
 			}
 			
-//			System.out.println(ANSI_RED + "-------------------------------------------" + ANSI_RESET);
-//			System.out.println("Vuoi continuare? (S/N)"); 
-//			String input = sc.nextLine();
-//			attivo = input.equalsIgnoreCase("S");
-			
-		//} while(attivo);
+			System.out.println(ANSI_RED + "-------------------------------------------" + ANSI_RESET);
+			System.out.println("Vuoi continuare? Digita 'S' per si o qualunque altro carattere per uscire"); 
+			sc.nextLine();
+			String input = sc.nextLine();
+			attivo = input.equalsIgnoreCase("S");
+		} while(attivo);
 	}
 	
-	
+
 	// METODO CREAZIONE DISTRIBUTORE
 	public static Distributore saveDistributore() {
 		Distributore d = new Distributore();
@@ -140,19 +146,21 @@ public class Menu extends JpaUtils {
 			case(3):
 				rinnovaTessera();
 				break;
+			default:
+				logger.error("Valore errato. Inserisci un valore corretto");
+				break;
 		}
 	}
-	
+
 	public static void acquistaTessera() {
-		sc.nextLine();
 		System.out.println("Inserisci il tuo nome");
-		String nome = sc.nextLine();
+		String nome = sc.next();
 		
 		System.out.println("Inserisci il tuo cognome");
-		String cognome = sc.nextLine();
+		String cognome = sc.next();
 
 		System.out.println("Inserisci la tua email");
-		String email = sc.nextLine();
+		String email = sc.next();
 
 		saveTessera(nome, cognome, email, LocalDate.now(), LocalDate.now().plusYears(1));
 	}
@@ -164,14 +172,14 @@ public class Menu extends JpaUtils {
 		tesseraDAO.save(u);
 		return u;
 	}
-	
+
 	public static void verificaTessera() {
 		System.out.println("Inserisci numero tessera");
 		long selezione5 = sc.nextLong();
 		
 		TesseraDAO.getDatiTessera(selezione5);
 	}
-	
+
 	public static void rinnovaTessera() {
 		System.out.println("Inserisci numero tessera da rinnovare");
 		long selezione6 = sc.nextLong();
@@ -179,7 +187,7 @@ public class Menu extends JpaUtils {
 		TesseraDAO.rinnovaTessera(selezione6);
 	}
 	
-	
+
 	// METODO GESTIONE TITOLI DI VIAGGIO
 	public static void acquistaTitoloDiViaggio() {
 		System.out.println("1 - Biglietto ordinario (" + TicketingDAO.getTicketNumber(selezione) + " biglietti rimanenti)");
@@ -195,12 +203,12 @@ public class Menu extends JpaUtils {
 			acquistaAbbonamento();
 			break;
 		default:
-			logger.error("Valore non presente nella lista!");
+			logger.error("Valore non presente nella lista");
 			break;
 		}
 	}
 	
-	
+
 	// METODI GESTIONE UTENTE (CREAZIONE, MODIFICA, RECUPERO DA ID)
 	public static Utente saveUtente() {
 		Utente u = new Utente("Mario", "Rossi", "mario.rossi@gmail.com");
@@ -209,11 +217,11 @@ public class Menu extends JpaUtils {
 		utenteDAO.save(u);
 		return u;
 	}
-	
+
 	public static void updateUtente(long nTessera, Abbonamento abbonamento) {		
 		UtenteDAO.updateUtenteById(nTessera, abbonamento);
 	}
-	
+
 	public static Utente getUtente(long id) {
 		UtenteDAO utente = new UtenteDAO();
 		return utente.getUtenteById(id);
@@ -231,31 +239,15 @@ public class Menu extends JpaUtils {
 		TicketingDAO.countBiglietti(selezione);
 	}
 
-	
+
 	// METODI ABBONAMENTO (CREAZIONE, VERIFICA ABBONAMENTO ATTIVO)
 	public static void acquistaAbbonamento() {
 		System.out.println("Inserisci il tuo numero tessera");
 		nTessera = sc.nextLong();
 		TitoloDiViaggioDAO.checkTessera(nTessera);
-		checkUtente();
-		
-		System.out.println("1 - Settimanale");
-		System.out.println("2 - Mensile");
-		int periodo = sc.nextInt();
-
-		switch (periodo) {
-			case (1):
-				saveAbbonamento(getUtente(nTessera), LocalDate.now(), LocalDate.now().plusWeeks(1), true, Periodicita.SETTIMANALE);
-				break;
-			case (2):
-				saveAbbonamento(getUtente(nTessera), LocalDate.now(), LocalDate.now().plusMonths(1), true, Periodicita.MENSILE);
-				break;
-			default:
-				logger.error("Valore non presente nella lista!");
-				break;
-			}
+		creaAbbonamento();
 	}
-	
+
 	public static void saveAbbonamento(Utente codice_utente, LocalDate dataEmissione, LocalDate dataScadenza, boolean attivo,
 			Periodicita periodicita) {
 		Abbonamento a = new Abbonamento(codice_utente, dataEmissione, dataScadenza, attivo, periodicita);
@@ -266,17 +258,75 @@ public class Menu extends JpaUtils {
 		updateUtente(nTessera, a);
 		TicketingDAO.countAbbonamenti(selezione);
 	}
-	
-	public static void checkUtente() {
+
+	public static void creaAbbonamento() {
 		Utente u = em.find(Utente.class, nTessera); 
-		boolean validita = u.isAbbonamentoattivo();
-		if(validita == true) {
-			System.out.println("Hai già un abbonamento attivo, impossibile crearne un altro!");
-			System.exit(0);
+		if (u.getAbbonamento() != null) {
+			boolean validita = u.getAbbonamento().isValidita();
+			if(validita == true) {
+				System.out.println("Hai già un abbonamento attivo, impossibile crearne un altro");
+				System.exit(0);
+			} else {
+				int id = u.getAbbonamento().getTitolo_id();
+				
+				System.out.println("Rinnova Abbonamento: ");
+				System.out.println("1 - Settimanale");
+				System.out.println("2 - Mensile");
+				int periodo = sc.nextInt();
+
+				switch (periodo) {
+					case (1):
+						Abbonamento a = em.find(Abbonamento.class, id);
+						a.setDataEmissione(LocalDate.now());
+						a.setDataScadenza(LocalDate.now().plusWeeks(1));
+						a.setValidita(true);
+						a.setDurata(Periodicita.SETTIMANALE);
+						
+						t.begin();
+						em.persist(a);
+						t.commit();
+						
+						updateUtente(nTessera, a);
+						break;
+					case (2):
+						Abbonamento ab = em.find(Abbonamento.class, id);
+						ab.setDataEmissione(LocalDate.now());
+						ab.setDataScadenza(LocalDate.now().plusMonths(1));
+						ab.setValidita(true);
+						ab.setDurata(Periodicita.MENSILE);
+						
+						t.begin();
+						em.persist(ab);
+						t.commit();
+						
+						updateUtente(nTessera, ab);
+						break;
+					default:
+						logger.error("Valore non presente nella lista!");
+						break;
+				}
+				System.out.println("Abbonamento rinnovata!");
+			}
+		} else if (u.getAbbonamento() == null) {
+			System.out.println("1 - Settimanale");
+			System.out.println("2 - Mensile");
+			int periodo = sc.nextInt();
+
+			switch (periodo) {
+				case (1):
+					saveAbbonamento(getUtente(nTessera), LocalDate.now(), LocalDate.now().plusWeeks(1), true, Periodicita.SETTIMANALE);
+					break;
+				case (2):
+					saveAbbonamento(getUtente(nTessera), LocalDate.now(), LocalDate.now().plusMonths(1), true, Periodicita.MENSILE);
+					break;
+				default:
+					logger.error("Valore non presente nella lista!");
+					break;
+			}
 		}
 	}
-		
 	
+
 	// METODO GESTIONE MEZZI
 	public static void scegliMezzo() {
 		if(selezione == 1) {
@@ -287,7 +337,7 @@ public class Menu extends JpaUtils {
 
 			List<Mezzo> mezzi = query.getResultList();
 			
-			System.out.println("Mezzi in servizio: ");
+			System.out.println("Mezzi in servizio:");
 			
 			for(int i = 0; i < mezzi.size(); i++) {
 				v = mezzi.get(i);
@@ -297,13 +347,25 @@ public class Menu extends JpaUtils {
 			
 			System.out.println(ANSI_GREEN + "Scegli su che mezzo viaggiare <---" + ANSI_RESET);
 			selectMezzo = sc.nextInt();
+			boolean mezzoEsistente = false;
 			
-			for(int i = 0; i < mezzi.size(); i++) {
-				Mezzo mezzo = mezzi.get(i);
-				if(selectMezzo == mezzo.getMezzo_id()) {
-					System.out.println("Sei salito su " + mezzo.getClass().getSimpleName().toUpperCase() + " " + mezzo.getNumero());
+			for (int i = 0; i < mezzi.size(); i++) {
+				v = mezzi.get(i);
+				mezzoId = v.getMezzo_id();
+				
+				if (selectMezzo == mezzoId) {
+					mezzoEsistente = true;
 					break;
 				}
+			}
+
+			if (mezzoEsistente) {
+				Mezzo m = em.find(Mezzo.class, selectMezzo);
+				System.out.println("Sei salito su " + m.getClass().getSimpleName().toUpperCase() + " " + m.getNumero());
+				convalidaTicket();
+				TrattaDAO.tempoEffettivo(selectMezzo);
+			} else {
+				System.out.println("Mezzo non esistente");
 			}
 		} else if(selezione == 2) {
 			String jpql = "SELECT m FROM Mezzo m JOIN m.tratta t WHERE t.partenza = :partenza  AND m.inServizio = true";
@@ -318,24 +380,35 @@ public class Menu extends JpaUtils {
 			for(int i = 0; i < mezzi.size(); i++) {
 				v = mezzi.get(i);
 				mezzoId = v.getMezzo_id();
-				System.out.println(mezzoId + " " + v);
+				System.out.println(mezzoId + " - " + v);
 			}
 			
 			System.out.println(ANSI_GREEN + "Scegli su che mezzo viaggiare <---" + ANSI_RESET);
 			selectMezzo = sc.nextInt();
+			boolean mezzoEsistente = false;
 			
-			for(int i = 0; i < mezzi.size(); i++) {
-				Mezzo mezzo = mezzi.get(i);
+			for (int i = 0; i < mezzi.size(); i++) {
+				v = mezzi.get(i);
+				mezzoId = v.getMezzo_id();
 				
-				if(selectMezzo == mezzo.getMezzo_id()) {
-					System.out.println("Sei salito su " + mezzo.getClass().getSimpleName().toUpperCase() + " " + mezzo.getNumero());
+				if (selectMezzo == mezzoId) {
+					mezzoEsistente = true;
 					break;
 				}
+			}
+
+			if (mezzoEsistente) {
+				Mezzo m = em.find(Mezzo.class, selectMezzo);
+				System.out.println("Sei salito su " + m.getClass().getSimpleName().toUpperCase() + " " + m.getNumero());
+				convalidaTicket();
+				TrattaDAO.tempoEffettivo(selectMezzo);
+			} else {
+				System.out.println("mezzo non esistente.");
 			}
 		}
 	}
 
-	
+
 	// METODO PER OBLITERARE IL BIGLIETTO O CONTROLLARE L'ABBONAMENTO
 	public static void convalidaTicket() {
 		System.out.println("Inserisci il codice biglietto/abbonamento");

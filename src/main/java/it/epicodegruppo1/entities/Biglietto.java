@@ -1,4 +1,4 @@
-package entities;
+package it.epicodegruppo1.entities;
 
 import java.time.LocalDate;
 
@@ -7,8 +7,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import entities.abstracts.Mezzo;
-import entities.abstracts.TitoloDiViaggio;
+import it.epicodegruppo1.entities.abstracts.Mezzo;
+import it.epicodegruppo1.entities.abstracts.TitoloDiViaggio;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

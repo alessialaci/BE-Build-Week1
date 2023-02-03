@@ -1,4 +1,4 @@
-package entities;
+package it.epicodegruppo1.entities;
 
 import java.util.Set;
 
@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import entities.abstracts.Mezzo;
+import it.epicodegruppo1.entities.abstracts.Mezzo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

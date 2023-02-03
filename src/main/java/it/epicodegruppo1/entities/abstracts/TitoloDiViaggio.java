@@ -1,4 +1,4 @@
-package entities.abstracts;
+package it.epicodegruppo1.entities.abstracts;
 
 import java.time.LocalDate;
 

@@ -1,8 +1,9 @@
-package dao;
+package it.epicodegruppo1.dao;
 
-import entities.Distributore;
-import entities.abstracts.Ticketing;
-import utils.JpaUtils;
+import it.epicodegruppo1.entities.Distributore;
+import it.epicodegruppo1.entities.abstracts.Ticketing;
+import it.epicodegruppo1.utils.JpaUtils;
+
 
 public class TicketingDAO extends JpaUtils {
 
@@ -13,13 +14,13 @@ public class TicketingDAO extends JpaUtils {
 			em.persist(tick);
 			t.commit();
 			
-			System.out.println( "Elemento inserito correttamente" );
+			System.out.println("Elemento inserito correttamente");
 		} catch(Exception e) {
-			logger.error( "Errore durante l'inserimento dell'elemento!" + e);
+			logger.error("Errore durante l'inserimento dell'elemento" + e);
 		}
 	}
 	
-	
+
 	// METODO PER CONTROLLARE LO STATO DEL DISTRIBUTORE (SE IN SERVIZIO O FUORI SERVIZIO)
 	public static void checkDistributore(int id) {
 		Distributore d = em.find(Distributore.class, id);
@@ -34,7 +35,7 @@ public class TicketingDAO extends JpaUtils {
 			em.persist(d);
 			t.commit();
 			
-			logger.error("Il distributore di " + d.getLuogo() + " è fuori servizio.");
+			System.out.println("Il distributore di " + d.getLuogo() + " è fuori servizio.");
 			System.exit(0);
 		} else {
 			if(inServizio == false) {
@@ -50,7 +51,7 @@ public class TicketingDAO extends JpaUtils {
 		}
 	} 
 	
-	
+
 	// METODO PER SETTARE IL NUMERO DEI BIGLIETTI EMESSI
 	public static void countBiglietti(int id) {
 		Ticketing ti = em.find(Ticketing.class, id);
@@ -66,18 +67,18 @@ public class TicketingDAO extends JpaUtils {
 			em.persist(ti);
 			t.commit();
 		} catch(Exception e1) {
-			logger.error("Errore!" + e1);
+			logger.error("Errore: " + e1);
 		}
 	}
 	
-	
+
 	// METODO CHE RITORNA IL NUMERO DI BIGLIETTI EMESSI (USATO NELLO SCANNER)
 	public static int getTicketNumber(int id) {
 		Ticketing ti = em.find(Ticketing.class, id);
 		return ti.getCounterBiglietti();
 	}
 	
-	
+
 	// METODO PER SETTARE IL NUMERO DEGLI ABBONAMENTI EMESSI
 	public static void countAbbonamenti(int id) {
 		Ticketing ti = em.find(Ticketing.class, id);
@@ -91,11 +92,11 @@ public class TicketingDAO extends JpaUtils {
 			em.persist(ti);
 			t.commit();
 		} catch(Exception e1) {
-			logger.error("Errore!" + e1);
+			logger.error("Errore: " + e1);
 		}
 	}
 	
-	
+
 	// METODO CHE RITORNA QUANTI BIGLIETTI E ABBONAMENTI SONO STATI EMESSI IN UNA DETERMINATA STAZIONE
 	public static void getTitoliEmessi(int id) {
 		Ticketing ti = em.find(Ticketing.class, id);

@@ -1,8 +1,8 @@
-package dao;
+package it.epicodegruppo1.dao;
 
-import entities.Abbonamento;
-import entities.Utente;
-import utils.JpaUtils;
+import it.epicodegruppo1.entities.Abbonamento;
+import it.epicodegruppo1.entities.Utente;
+import it.epicodegruppo1.utils.JpaUtils;
 
 
 public class UtenteDAO extends JpaUtils {
@@ -14,9 +14,9 @@ public class UtenteDAO extends JpaUtils {
 			em.persist(u);
 			t.commit();
 			
-			System.out.println( "Utente inserito correttamente" );
+			System.out.println("Utente inserito correttamente");
 		} catch(Exception e) {
-			logger.error( "Errore durante l'inserimento dell'Utente!" );
+			logger.error("Errore durante l'inserimento dell'Utente " + e);
 		}
 	}
 	
@@ -26,21 +26,19 @@ public class UtenteDAO extends JpaUtils {
 		Utente u = em.find(Utente.class, id);
 		
 		if(u == null) {
-			logger.error("Errore, questo utente non esiste!");
+			System.out.println("Errore, questo utente non esiste");
 			return;
 		}
 		
 		try {
-			u.setAbbonamentoattivo(true);
 			u.setAbbonamento(abbonamento);
 			
 			t.begin();
 			em.persist(u);
 			t.commit();
 			
-			
 		} catch(Exception e1) {
-			logger.error("Errore, abbonamento già attivo!");
+			logger.error("Errore, abbonamento già attivo");
 		}
 	}
 	
@@ -49,8 +47,8 @@ public class UtenteDAO extends JpaUtils {
 	public Utente getUtenteById(long id) {
 		Utente e = em.find(Utente.class, id);
 		
-		if( e == null ) {
-			logger.error( "Il numero di tessera " + id + " non esiste!" );
+		if(e == null) {
+			System.out.println("Il numero di tessera " + id + " non esiste");
 		}
 		
 		return e;

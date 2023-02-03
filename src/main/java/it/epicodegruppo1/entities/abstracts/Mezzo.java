@@ -1,4 +1,6 @@
-package entities.abstracts;
+package it.epicodegruppo1.entities.abstracts;
+
+import java.time.LocalDate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,7 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import entities.Tratta;
+import it.epicodegruppo1.entities.Tratta;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -46,6 +48,15 @@ abstract public class Mezzo {
 	
 	@Column(name = "biglietti_vidimati")
 	private int bigliettiVidimati;
+	
+	@Column(name = "n_corse")
+	private int nCorse;
+	
+	@Column(name = "inizio_manutenzione")
+	private LocalDate inizioManutenzione;
+	
+	@Column(name = "fine_manutenzione")
+	private LocalDate fineManutenzione;
 
 	public Mezzo(int capienza, boolean inServizio, Tratta tratta, String numero) {
 		this.capienza = capienza;
@@ -56,7 +67,7 @@ abstract public class Mezzo {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName().toUpperCase() + " " + numero + " - Partenza: " + tratta.getPartenza() + " - Arrivo: " + tratta.getCapolinea();
+		return getClass().getSimpleName().toUpperCase() + " " + numero + " - Partenza: " + tratta.getPartenza() + " - Arrivo: " + tratta.getCapolinea() + " - durata media: " + tratta.getTempoPercorrenza();
 	}
 	
 }

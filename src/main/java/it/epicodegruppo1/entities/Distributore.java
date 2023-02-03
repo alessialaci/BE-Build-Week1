@@ -1,11 +1,11 @@
-package entities;
+package it.epicodegruppo1.entities;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import entities.abstracts.Ticketing;
+import it.epicodegruppo1.entities.abstracts.Ticketing;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
